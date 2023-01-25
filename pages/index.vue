@@ -12,9 +12,8 @@ const minutes = ref("");
 
 const snapshots = ref<QuerySnapshot<DocumentData>>();
 const { listStorage, urlList, store, collectionRef } = useFirebase();
-const { getWeather, weather } = useWeather();
+const { getWeather, weather, weatherIconDOM,weatherIcon } = useWeather();
 await getWeather();
-console.log(weather.value.name);
 // Store 一覧
 const listenDoc = onSnapshot(
   collectionRef,
@@ -36,7 +35,6 @@ onMounted(async () => {
     } else {
       index.value = 0;
     }
-    console.log(index.value);
   }, 300000);
 
   // 時計
@@ -45,6 +43,7 @@ onMounted(async () => {
     hours.value = ("0" + time.value.getHours()).slice(-2);
     minutes.value = ("0" + time.value.getMinutes()).slice(-2);
   }, 1000);
+
 });
 </script>
 
@@ -59,21 +58,25 @@ onMounted(async () => {
       alt=""
     />
     <div
-      class="absolute bottom-0 w-full h-40 bg-black opacity-50 ackdrop-blur-md flex items-center"
+      class="absolute bottom-0 w-full h-40 bg-black/50 text-white backdrop-blur-md flex items-center"
     >
       <span class="mx-8 text-4xl font-bold">2023.01.25(水)</span>
       <span class="mr-8 text-8xl font-bold">
         {{ `${hours}:${minutes}` }}
       </span>
       <span class="mx-8 text-4xl font-bold">{{ weather.name }}</span>
-      <span class="mr-8 text-8xl font-bold">{{ weather.weather[0].description }}</span>
+      <div v-html="weatherIconDOM.innerHTML"></div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style>
 .slides > * {
   grid-column: 1 / -1;
   grid-row: 1 / -1;
+}
+.AnimatedWeatherIcon {
+  width: 128px;
+  height: 128px;
 }
 </style>

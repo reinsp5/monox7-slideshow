@@ -8,6 +8,6 @@
 
 <style>
 * {
-  font-family: "Kosugi Maru", sans-serif;
+  font-family: "M PLUS 1", sans-serif;
 }
 </style>

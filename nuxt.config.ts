@@ -26,7 +26,7 @@ export default defineNuxtConfig({
   googleFonts: {
     display: "swap",
     families: {
-      "Kosugi+Maru": true,
+      "M+PLUS+1": true,
       Lato: [400],
       Raleway: {
         wght: [400],
