@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss"],
+  modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts"],
   css: ["vuetify/lib/styles/main.sass", "mdi/css/materialdesignicons.min.css"],
   build: {
     transpile: ["vuetify"],
@@ -20,6 +20,17 @@ export default defineNuxtConfig({
       FIREBASE_MESSAGE_SENDER: process.env.FIREBASE_MESSAGE_SENDER || "",
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || "",
       USE_EMULATOR: process.env.USE_EMULATOR || "",
+    },
+  },
+  googleFonts: {
+    display: "swap",
+    families: {
+      "Kosugi+Maru": true,
+      Lato: [400],
+      Raleway: {
+        wght: [400],
+        ital: [400],
+      },
     },
   },
 });
