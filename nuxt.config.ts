@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       FIREBASE_MESSAGE_SENDER: process.env.FIREBASE_MESSAGE_SENDER || "",
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || "",
       USE_EMULATOR: process.env.USE_EMULATOR || "",
+      OPEN_WEATHER_KEY: process.env.OPEN_WEATHER_KEY || "",
     },
   },
   googleFonts: {

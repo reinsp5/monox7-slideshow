@@ -19,6 +19,7 @@
     "@vueuse/firebase": "^9.11.1",
     "firebase": "^9.16.0",
     "mdi": "^2.2.43",
+    "openweatherapi-js-sdk": "^1.1.3",
     "vuetify": "^3.1.2",
     "webp-converter-browser": "^1.0.3"
   }

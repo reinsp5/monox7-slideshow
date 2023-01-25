@@ -12,6 +12,9 @@ const minutes = ref("");
 
 const snapshots = ref<QuerySnapshot<DocumentData>>();
 const { listStorage, urlList, store, collectionRef } = useFirebase();
+const { getWeather, weather } = useWeather();
+await getWeather();
+console.log(weather.value.name);
 // Store 一覧
 const listenDoc = onSnapshot(
   collectionRef,
@@ -59,11 +62,11 @@ onMounted(async () => {
       class="absolute bottom-0 w-full h-40 bg-black opacity-50 ackdrop-blur-md flex items-center"
     >
       <span class="mx-8 text-4xl font-bold">2023.01.25(水)</span>
-      <span
-        class="mr-8 text-8xl font-bold transition-all duration-500 ease-in-out"
-      >
+      <span class="mr-8 text-8xl font-bold">
         {{ `${hours}:${minutes}` }}
       </span>
+      <span class="mx-8 text-4xl font-bold">{{ weather.name }}</span>
+      <span class="mr-8 text-8xl font-bold">{{ weather.weather[0].description }}</span>
     </div>
   </div>
 </template>
