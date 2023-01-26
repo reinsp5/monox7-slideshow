@@ -21,6 +21,7 @@ export default defineNuxtConfig({
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || "",
       USE_EMULATOR: process.env.USE_EMULATOR || "",
       OPEN_WEATHER_KEY: process.env.OPEN_WEATHER_KEY || "",
+      CITY_ID: process.env.CITY_ID || "",
     },
   },
   googleFonts: {

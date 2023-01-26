@@ -12,7 +12,7 @@ const minutes = ref("");
 
 const snapshots = ref<QuerySnapshot<DocumentData>>();
 const { listStorage, urlList, store, collectionRef } = useFirebase();
-const { getWeather, weather, weatherIconDOM,weatherIcon } = useWeather();
+const { getWeather, weather, weatherIcon } = useWeather();
 await getWeather();
 // Store 一覧
 const listenDoc = onSnapshot(
@@ -27,7 +27,7 @@ const listenDoc = onSnapshot(
 );
 
 onMounted(async () => {
-  // 画像変更
+  // 画像変更（５分ごとに更新）
   useIntervalFn(async () => {
     if (snapshots.value?.docs.length === undefined) return;
     if (index.value < snapshots.value?.docs.length - 1) {
@@ -37,13 +37,17 @@ onMounted(async () => {
     }
   }, 300000);
 
-  // 時計
+  // 時計（１秒毎に更新）
   useIntervalFn(() => {
     time.value.setSeconds(time.value.getSeconds() + 1);
     hours.value = ("0" + time.value.getHours()).slice(-2);
     minutes.value = ("0" + time.value.getMinutes()).slice(-2);
   }, 1000);
 
+  // 天気予報（１時間毎に更新）
+  useIntervalFn(async () => {
+    await getWeather();
+  }, 3600000);
 });
 </script>
 
@@ -58,14 +62,52 @@ onMounted(async () => {
       alt=""
     />
     <div
-      class="absolute bottom-0 w-full h-40 bg-black/50 text-white backdrop-blur-md flex items-center"
+      class="absolute bottom-0 w-full h-52 bg-black/50 text-white backdrop-blur-md flex items-center"
     >
-      <span class="mx-8 text-4xl font-bold">2023.01.25(水)</span>
-      <span class="mr-8 text-8xl font-bold">
-        {{ `${hours}:${minutes}` }}
-      </span>
-      <span class="mx-8 text-4xl font-bold">{{ weather.name }}</span>
-      <div v-html="weatherIconDOM.innerHTML"></div>
+      <div class="grow grid grid-cols2">
+        <div class="ml-8 text-3xl font-bold">2023.01.25(水)</div>
+        <div class="mx-auto text-8xl font-bold">
+          {{ `${hours}:${minutes}` }}
+        </div>
+      </div>
+      <div class="mx-8 grow flex place-items-center">
+        <div class="grow text-right">
+          <span class="text-4xl font-bold">{{ weather.name }}</span>
+        </div>
+        <div class="grid grid-cols-1 place-items-center">
+          <img
+            class="w-32 h-auto"
+            :src="`/weather_icon/${weatherIcon}.svg`"
+            alt=""
+          />
+          <div class="grid grid-cols-3">
+            <div class="grid grid-cols-2 place-items-center text-2xl">
+              <img
+                class="w-16 h-auto"
+                src="/weather_icon/thermometer-warmer.svg"
+                alt=""
+              />
+              {{ `${weather.main.temp_max.toFixed(1)}℃` }}
+            </div>
+            <div class="grid grid-cols-2 place-items-center text-2xl">
+              <img
+                class="w-16 h-auto"
+                src="/weather_icon/thermometer-colder.svg"
+                alt=""
+              />
+              {{ `${weather.main.temp_min.toFixed(1)}℃` }}
+            </div>
+            <div class="grid grid-cols-2 place-items-center text-2xl">
+              <img
+                class="w-16 h-auto"
+                src="/weather_icon/humidity.svg"
+                alt=""
+              />
+              {{ `${weather.main.humidity.toFixed(1)}%` }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

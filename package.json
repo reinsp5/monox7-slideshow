@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@vueuse/firebase": "^9.11.1",
-    "animated-weather-icon": "^1.2.0",
     "firebase": "^9.16.0",
     "mdi": "^2.2.43",
     "openweatherapi-js-sdk": "^1.1.3",
