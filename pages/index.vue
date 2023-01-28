@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useIntervalFn } from "@vueuse/core";
-import { DocumentData, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { DocumentData, FirestoreError, onSnapshot, QuerySnapshot } from "firebase/firestore";
 definePageMeta({
   layout: "view",
 });
@@ -11,17 +11,17 @@ const hours = ref("");
 const minutes = ref("");
 
 const snapshots = ref<QuerySnapshot<DocumentData>>();
-const { listStorage, urlList, store, collectionRef } = useFirebase();
+const { store, collectionRef } = useFirebase();
 const { getWeather, weather, weatherIcon } = useWeather();
 await getWeather();
 // Store 一覧
 const listenDoc = onSnapshot(
   collectionRef,
-  (res) => {
+  (res:QuerySnapshot<DocumentData>) => {
     if (res.docs.length - 1 < index.value) index.value = res.docs.length;
     snapshots.value = res;
   },
-  (err) => {
+  (err:FirestoreError) => {
     console.error(err);
   }
 );

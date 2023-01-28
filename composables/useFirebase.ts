@@ -1,9 +1,9 @@
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-} from "firebase/firestore";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import {
   getStorage,
   ref as storageRef,
@@ -15,20 +15,55 @@ import {
 import { blobToWebP } from "webp-converter-browser";
 
 export const useFirebase = () => {
-  const urlList = ref<string[]>([]);
   const auth = getAuth();
+  const token = useState<string | null>("token", () => null);
   const storage = getStorage();
   const store = getFirestore();
   const collectionRef = collection(store, "imageUrls");
+  const docsRef = ref();
 
   // ログイン
   const signIn = async (email: string, password: string) => {
     return await new Promise<void>((resolve, reject) => {
       return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          resolve();
+          userCredential.user
+            .getIdToken()
+            .then((idToken) => {
+              token.value = idToken;
+              resolve();
+            })
+            .catch(reject);
         })
         .catch(reject);
+    });
+  };
+
+  const checkAuthState = async () => {
+    return await new Promise<void>((resolve, reject) => {
+      // client only
+      if (process.server) return resolve();
+      const auth = getAuth();
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          if (user) {
+            user
+              .getIdToken()
+              .then((idtoken) => {
+                token.value = idtoken;
+                resolve();
+              })
+              .catch(reject);
+          } else {
+            token.value = null;
+            resolve();
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
     });
   };
 
@@ -52,16 +87,12 @@ export const useFirebase = () => {
     });
   };
 
-  // Storage一覧取得
-  const listStorage = async () => {
+  // Store取得
+  const listStore = async () => {
     return await new Promise<void>((resolve, reject) => {
-      const listRef = storageRef(storage, "images");
-      return listAll(listRef)
+      getDocs(collectionRef)
         .then((res) => {
-          res.items.forEach(async (itemRef) => {
-            const url = await getDownloadURL(itemRef);
-            if (!urlList.value.includes(url)) urlList.value.push(url);
-          });
+          docsRef.value = res;
           resolve();
         })
         .catch(reject);
@@ -81,10 +112,12 @@ export const useFirebase = () => {
 
   return {
     signIn,
+    checkAuthState,
     uploadFile,
-    listStorage,
-    urlList,
+    listStore,
+    token,
     store,
     collectionRef,
+    docsRef,
   };
 };
