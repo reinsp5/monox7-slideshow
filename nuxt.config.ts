@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts"],
+  modules: ["@vueuse/nuxt", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "nuxt-icon"],
   css: ["vuetify/lib/styles/main.sass", "mdi/css/materialdesignicons.min.css"],
   build: {
     transpile: ["vuetify"],

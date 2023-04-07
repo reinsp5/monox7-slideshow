@@ -1,4 +1,13 @@
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  query,
+  where,
+  deleteDoc,
+} from "firebase/firestore";
 import {
   getAuth,
   onAuthStateChanged,
@@ -110,11 +119,19 @@ export const useFirebase = () => {
     });
   };
 
+  // Store 削除
+  const delDoc = async (fileName: string) => {
+    return await new Promise<void>(async (resolve, reject) => {
+      console.log(fileName);
+    });
+  };
+
   return {
     signIn,
     checkAuthState,
     uploadFile,
     listStore,
+    delDoc,
     token,
     store,
     collectionRef,
