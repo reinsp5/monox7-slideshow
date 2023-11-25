@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useIntervalFn } from "@vueuse/core";
-import { DocumentData, FirestoreError, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { FirestoreError, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import type { DocumentData } from "firebase/firestore";
 definePageMeta({
   layout: "view",
 });
@@ -17,11 +18,11 @@ await getWeather();
 // Store 一覧
 const listenDoc = onSnapshot(
   collectionRef,
-  (res:QuerySnapshot<DocumentData>) => {
+  (res: QuerySnapshot<DocumentData>) => {
     if (res.docs.length - 1 < index.value) index.value = res.docs.length;
     snapshots.value = res;
   },
-  (err:FirestoreError) => {
+  (err: FirestoreError) => {
     console.error(err);
   }
 );
